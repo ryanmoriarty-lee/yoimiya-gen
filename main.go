@@ -5,6 +5,7 @@ import (
 	"github.com/ryanmoriarty-lee/yoimiya-gen/app/http"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/provider/app"
+	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/provider/cache"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/provider/config"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/provider/distributed"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/provider/env"
@@ -12,6 +13,7 @@ import (
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/provider/kernel"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/provider/log"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/provider/orm"
+	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/provider/redis"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/provider/trace"
 )
 
@@ -28,6 +30,8 @@ func main() {
 	container.Bind(&trace.YoimiyaTraceProvider{})
 	container.Bind(&log.YoimiyaLogServiceProvider{})
 	container.Bind(&orm.GormProvider{})
+	container.Bind(&redis.RedisProvider{})
+	container.Bind(&cache.YoimiyaCacheProvider{})
 
 	// 将HTTP引擎初始化,并且作为服务提供者绑定到服务容器中
 	engine, _ := http.NewHttpEngine(container)
