@@ -1,16 +1,17 @@
 package gin
 
 import (
-	"fmt"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework"
 )
 
+// SetContainer 为Engine设置container
 func (engine *Engine) SetContainer(container framework.Container) {
 	engine.container = container
 }
 
-func (engine *Engine) Container() {
-	fmt.Println(&engine.container)
+// GetContainer 从Engine中获取container
+func (engine *Engine) GetContainer() framework.Container {
+	return engine.container
 }
 
 // engine实现container的绑定封装
