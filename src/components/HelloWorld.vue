@@ -88,7 +88,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      msg: 'Welcome to Your Yoimiya App'
+      msg: 'Welcome to Your Yoimiya-Gen App'
     }
   }
 }
