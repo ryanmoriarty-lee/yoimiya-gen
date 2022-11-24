@@ -1,0 +1,11 @@
+host: 127.0.0.1
+user: ryanmoriarty
+password: 123456789
+rsa_key:
+timeout: 1000
+remote_path: "/home/ryanmoriarty/"
+post_shell:
+  - "./yoimiya serve restart"
+  - "pwd"
+goos: linux
+goarch: amd64
