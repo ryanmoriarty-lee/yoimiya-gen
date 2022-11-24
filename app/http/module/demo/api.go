@@ -16,9 +16,11 @@ func Register(r *gin.Engine) error {
 	r.GET("/demo/demo", api.Demo)
 	r.GET("/demo/demo2", api.Demo2)
 	r.POST("/demo/demo_post", api.DemoPost)
-	r.GET("/demo/orm", api.DemoOrm)
-	r.GET("/demo/cache/redis", api.DemoRedis)
-	r.GET("/demo/cache/cache", api.DemoCache)
+
+	//如果需要访问以下api，需要在该项目下的config/development设定好相关的配置，如果需要orm连接数据库或cache连接redis，请自行进行安装
+	//r.GET("/demo/orm", api.DemoOrm)
+	//r.GET("/demo/cache/redis", api.DemoRedis)
+	//r.GET("/demo/cache/cache", api.DemoCache)
 
 	return nil
 }
