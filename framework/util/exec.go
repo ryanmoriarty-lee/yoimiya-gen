@@ -1,3 +1,6 @@
+//go:build !windows
+// +build !windows
+
 package util
 
 import (
@@ -28,4 +31,9 @@ func CheckProcessExist(pid int) bool {
 		return false
 	}
 	return true
+}
+
+// KillProcess kill process by pid
+func KillProcess(pid int) error {
+	return syscall.Kill(pid, syscall.SIGTERM)
 }

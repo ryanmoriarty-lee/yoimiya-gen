@@ -89,11 +89,6 @@ func NewYoimiyaConfig(params ...interface{}) (interface{}, error) {
 	envFolder := params[1].(string)
 	envMaps := params[2].(map[string]string)
 
-	// 检查文件夹是否存在
-	if _, err := os.Stat(envFolder); os.IsNotExist(err) {
-		return nil, errors.New("folder " + envFolder + " not exist: " + err.Error())
-	}
-
 	// 实例化
 	yoimiyaConf := &YoimiyaConfig{
 		c:        container,
@@ -103,6 +98,11 @@ func NewYoimiyaConfig(params ...interface{}) (interface{}, error) {
 		confRaws: map[string][]byte{},
 		keyDelim: ".",
 		lock:     sync.RWMutex{},
+	}
+
+	// 检查文件夹是否存在
+	if _, err := os.Stat(envFolder); os.IsNotExist(err) {
+		return yoimiyaConf, nil
 	}
 
 	// 读取每个文件
