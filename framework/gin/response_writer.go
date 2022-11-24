@@ -57,6 +57,15 @@ func (w *responseWriter) reset(writer http.ResponseWriter) {
 	w.status = defaultStatus
 }
 
+func NewResponseWriter(writer http.ResponseWriter) *responseWriter {
+	var w responseWriter
+	w.ResponseWriter = writer
+	w.size = noWritten
+	w.status = defaultStatus
+
+	return &w
+}
+
 func (w *responseWriter) WriteHeader(code int) {
 	if code > 0 && w.status != code {
 		if w.Written() {

@@ -13,7 +13,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"syscall"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -145,7 +144,8 @@ func (p *Proxy) newProxyReverseProxy(frontend, backend *url.URL) *httputil.Rever
 // rebuildBackend 重新编译后端
 func (p *Proxy) rebuildBackend() error {
 	// 重新编译yoimiya
-	cmdBuild := exec.Command("./yoimiya", "build", "backend")
+	bin := os.Args[0]
+	cmdBuild := exec.Command(bin, "build", "backend")
 	cmdBuild.Stdout = os.Stdout
 	cmdBuild.Stderr = os.Stderr
 	if err := cmdBuild.Start(); err == nil {
@@ -162,16 +162,18 @@ func (p *Proxy) restartBackend() error {
 
 	// 杀死之前的进程
 	if p.backendPid != 0 {
-		syscall.Kill(p.backendPid, syscall.SIGKILL)
+		util.KillProcess(p.backendPid)
 		p.backendPid = 0
 	}
 
 	// 设置随机端口，真实后端的端口
 	port := p.devConfig.Backend.Port
 	yoimiyaAddress := fmt.Sprintf(":" + port)
+
+	bin := os.Args[0]
 	// 使用命令行启动后端进程
-	cmd := exec.Command("./yoimiya-gen", "app", "start", "--address="+yoimiyaAddress)
-	cmd.Stdout = os.NewFile(0, os.DevNull)
+	cmd := exec.Command(bin, "app", "start", "--address="+yoimiyaAddress)
+	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	fmt.Println("启动后端服务: ", "http://127.0.0.1:"+port)
 	err := cmd.Start()
@@ -188,7 +190,7 @@ func (p *Proxy) restartFrontend() error {
 	// 启动前端调试模式
 	// 先杀死旧进程
 	if p.frontendPid != 0 {
-		syscall.Kill(p.frontendPid, syscall.SIGKILL)
+		util.KillProcess(p.frontendPid)
 		p.frontendPid = 0
 	}
 
@@ -293,6 +295,7 @@ func (p *Proxy) monitorBackend() error {
 			// 计时器时间到了，代表之前有文件更新事件重置过计时器
 			// 即有文件更新
 			fmt.Println("...检测到文件更新，重启服务开始...")
+			fmt.Println("...期间请不要发送任何请求...")
 			if err := p.rebuildBackend(); err != nil {
 				fmt.Println("重新编译失败：", err.Error())
 			} else {

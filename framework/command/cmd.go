@@ -3,6 +3,9 @@ package command
 import (
 	"fmt"
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/disiqueira/gotree"
+	"github.com/jianfengye/collection"
+	"github.com/pkg/errors"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/cobra"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/contract"
 	"github.com/ryanmoriarty-lee/yoimiya-gen/framework/util"
@@ -10,9 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/jianfengye/collection"
-	"github.com/pkg/errors"
 )
 
 // 初始化command相关命令
@@ -39,15 +39,18 @@ var cmdListCommand = &cobra.Command{
 	Use:   "list",
 	Short: "列出所有控制台命令",
 	RunE: func(c *cobra.Command, args []string) error {
-		cmds := c.Root().Commands()
-		ps := [][]string{}
-		for _, cmd := range cmds {
-			line := []string{cmd.Name(), cmd.Short}
-			ps = append(ps, line)
-		}
-		util.PrettyPrint(ps)
+		rootTree := gotree.New("yoimiya")
+		addCommandToTree(rootTree, c.Root())
+		fmt.Println(rootTree.Print())
 		return nil
 	},
+}
+
+func addCommandToTree(tree gotree.Tree, cmd *cobra.Command) {
+	for _, c := range cmd.Commands() {
+		node := tree.Add(c.Name() + "\t" + c.Short)
+		addCommandToTree(node, c)
+	}
 }
 
 // cmdCreateCommand 创建一个业务控制台命令

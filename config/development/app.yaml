@@ -5,8 +5,8 @@ swagger_open: true
 dev_fresh: 1
 
 path:
-  log_folder: "/home/ryanmoriarty/yoimiya-gen/storage/log"
-  runtime_folder: "/home/ryanmoriarty/yoimiya-gen/storage/runtime"
+#  log_folder: "/home/ryanmoriarty/yoimiya-gen/storage/log"
+#  runtime_folder: "/home/ryanmoriarty/yoimiya-gen/storage/runtime"
 
 dev: # 调试模式
   port: 8070 # 调试模式最终监听的端口，默认为8070
